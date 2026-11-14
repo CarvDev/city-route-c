@@ -6,7 +6,7 @@ Projeto do Semestre — Disciplina de Estrutura de Dados
 Universidade Estadual de Santa Cruz (UESC) · Curso de Ciência da Computação · Semestre 2026.2
 Professora: Luenne Nailam
 
-## 2. Sobre o projeto
+## 1. Sobre o projeto
 
 O **CityRoute C** é um sistema simplificado, escrito em **C**, que simula uma central de distribuição urbana. Ele recebe pedidos de entrega, organiza a ordem de atendimento por prioridade, localiza os pontos de destino e mantém um histórico das entregas processadas, além de gerar relatórios ordenados e comparar o desempenho de algoritmos de ordenação.
 
