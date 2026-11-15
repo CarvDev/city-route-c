@@ -1,0 +1,26 @@
+name: build
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  compile:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compilar sem warnings
+        run: |
+          shopt -s nullglob
+          fontes=(*.c)
+
+          if [ ${#fontes[@]} -eq 0 ]; then
+            echo "::notice::Nenhum arquivo .c. Compilação ignorada."
+            exit 0
+          fi
+
+          if ! gcc -Wall -Wextra -pedantic -std=c11 -Werror "${fontes[@]}" -o cityroute; then
+            echo "::error title=Compilação falhou::O código gerou erros ou warnings. Corrija todos antes do merge (o projeto exige compilação sem avisos)."
+            exit 1
+          fi
