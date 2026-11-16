@@ -13,7 +13,7 @@ jobs:
       - name: Compilar sem warnings
         run: |
           shopt -s nullglob
-          fontes=(*.c)
+          fontes=(src/*.c)
 
           if [ ${#fontes[@]} -eq 0 ]; then
             echo "::notice::Nenhum arquivo .c. Compilação ignorada."

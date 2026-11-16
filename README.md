@@ -73,7 +73,7 @@ Regra de prioridade: Expressa > VIP > Convencional. Empate resolvido por FIFO (m
 Requisitos: compilador C (GCC ou Clang)
 
 ```bash
-gcc -Wall -Wextra -pedantic -std=c11 *.c -o cityroute
+gcc -Wall -Wextra -pedantic -std=c11 src/*.c -o cityroute
 ./cityroute
 ```
 
@@ -82,7 +82,7 @@ O programa deve compilar **sem warnings**. Para verificar vazamentos e acessos i
 ```bash
 valgrind --leak-check=full ./cityroute
 # ou
-gcc -fsanitize=address,undefined -g *.c -o cityroute
+gcc -fsanitize=address,undefined -g src/*.c -o cityroute
 ```
 
 ## 5. Requisitos técnicos
