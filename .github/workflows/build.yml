@@ -20,7 +20,7 @@ jobs:
             exit 0
           fi
 
-          if ! gcc -Wall -Wextra -pedantic -std=c11 -Werror "${fontes[@]}" -o cityroute; then
+          if ! gcc -Wall -Wextra -pedantic -std=c11 -Werror -Iinclude "${fontes[@]}" -o cityroute; then
             echo "::error title=Compilação falhou::O código gerou erros ou warnings. Corrija todos antes do merge (o projeto exige compilação sem avisos)."
             exit 1
           fi
