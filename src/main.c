@@ -1,6 +1,6 @@
-// Placeholder
+#include "menu.h"
 
-int main() {
+int main(void) {
+    iniciar_menu();
     return 0;
 }
-
