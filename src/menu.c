@@ -1,6 +1,6 @@
 #include <stddef.h>
 #include <stdio.h>
-#include "entrada.h" // TROCAR PARA .H
+#include "entrada.h"
 
 #include "menu.h"
 
@@ -57,7 +57,7 @@ static void exibir_menu_temp(char *titulo, char **matriz_opcoes, int num_opcoes)
 }
 
 /* 
-  * Obs: As funções de menu abaixo utilizam o templete genérico definido acima.
+  * Obs: As funções de menu abaixo utilizam o template genérico definido acima.
   * Elas provavelmente precisarão ser reescritas quando o sistema estiver mais completo.
   * Sinta-se livre para modificá-las se precisar.
 */
@@ -119,6 +119,7 @@ void iniciar_menu(void) {
         menu_historico,
         menu_relatorios
     };
+    size_t qtd_menus = sizeof(menus) / sizeof(FuncaoMenu);
 
     do {
         exibir_cabecalho("Menu Principal");
@@ -132,7 +133,7 @@ void iniciar_menu(void) {
         exibir_prompt();
         opcao = ler_inteiro();
         if (opcao == 0) return;
-        if (opcao > 0 && opcao <= 4) {
+        if (opcao > 0 && (size_t)opcao <= qtd_menus) {
             menus[opcao - 1]();
             continue;
         }
