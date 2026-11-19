@@ -31,4 +31,4 @@ int ler_inteiro(void);
  * Exibe uma mensagem opcional e aguarda o usuário pressionar ENTER.
  * Se `mensagem` for NULL, nenhuma mensagem é exibida.
  */
-void pausar(char *mensagem);
+void pausar(const char *mensagem);
