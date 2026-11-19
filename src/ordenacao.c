@@ -58,7 +58,7 @@ EstatisticasOrdenacao merge_sort(void *vet, size_t qtd_elementos,
     if (qtd_elementos < 2 || tam_elemento < 1) 
         return (EstatisticasOrdenacao){0};
 
-    if (vet == NULL || cmp == NULL || overflow_mul_size(qtd_elementos, tam_elemento))
+    if (vet == NULL || cmp == NULL || mul_estoura_size(qtd_elementos, tam_elemento))
         return (EstatisticasOrdenacao){ .segundos = -1 };
 
     unsigned char *aux = malloc(qtd_elementos * tam_elemento);
@@ -81,7 +81,7 @@ EstatisticasOrdenacao insertion_sort(void *vet, size_t qtd_elementos,
     if (qtd_elementos < 2 || tam_elemento < 1) 
         return (EstatisticasOrdenacao){0};
 
-    if (vet == NULL || cmp == NULL || overflow_mul_size(qtd_elementos, tam_elemento))
+    if (vet == NULL || cmp == NULL || mul_estoura_size(qtd_elementos, tam_elemento))
         return (EstatisticasOrdenacao){ .segundos = -1 };
 
     unsigned char *base = vet;

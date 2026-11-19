@@ -3,20 +3,20 @@
 #include "tipos.h"
 #include "historico.h" 
 #include "utils.h"
+#include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include <math.h>
 
 // Para comparar pelo código de rastreio
 static int compara_cod_rastreio(const void *a, const void *b) {
-    const Pedido *p1 = (Pedido*)a;
-    const Pedido *p2 = (Pedido*)b;
+    const Pedido *p1 = (const Pedido*)a;
+    const Pedido *p2 = (const Pedido*)b;
 
-    if (p1->cod_rastreio < p2->cod_rastreio) return -1;
-    if (p1->cod_rastreio > p2->cod_rastreio) return 1;
-
-    return 0;
+    return (p1->cod_rastreio > p2->cod_rastreio) - 
+        (p1->cod_rastreio < p2->cod_rastreio);
 }
 
 // Para comparar pelo valor
@@ -83,7 +83,7 @@ void comparar_ordenacoes(const Pedido *vet_base, size_t tam, Criterio c,
 {
     if (vet_base == NULL || ptr_status_insert == NULL || ptr_status_merge == NULL) return;
 
-    if (overflow_mul_size(tam, sizeof(Pedido))) {
+    if (mul_estoura_size(tam, sizeof(Pedido))) {
         *ptr_status_insert = (EstatisticasOrdenacao){.segundos = -1};
         *ptr_status_merge  = (EstatisticasOrdenacao){.segundos = -1};
         return;
@@ -93,15 +93,12 @@ void comparar_ordenacoes(const Pedido *vet_base, size_t tam, Criterio c,
     Pedido *vet_insert = malloc(tam_bytes);
 
     unsigned char erro_alocacao = 0;
-    if (vet_merge == NULL) {
-        *ptr_status_merge = (EstatisticasOrdenacao){.segundos = -1};
-        erro_alocacao = 1;
-    }
-    if (vet_insert == NULL) {
-        *ptr_status_insert = (EstatisticasOrdenacao){.segundos = -1};
-        erro_alocacao = 1;
-    }
+    erro_alocacao |= (vet_merge == NULL);
+    erro_alocacao |= (vet_merge == NULL);
+
     if (erro_alocacao) {
+        *ptr_status_insert = (EstatisticasOrdenacao){.segundos = -1};
+        *ptr_status_merge = (EstatisticasOrdenacao){.segundos = -1};
         free(vet_merge);
         free(vet_insert);
         return;
@@ -117,5 +114,30 @@ void comparar_ordenacoes(const Pedido *vet_base, size_t tam, Criterio c,
     free(vet_insert);
 }
 
+void exibir_resultado_comparacao(Criterio c, const EstatisticasOrdenacao *ptr_status_insert, 
+    const EstatisticasOrdenacao *ptr_status_merge) 
+{
+    // Para capturar os erros em desenvolvimento
+    assert(ptr_status_insert != NULL && "ptr_status_insert é NULL na função de exibir comparação");
+    assert(ptr_status_merge != NULL && "ptr_status_merge é NULL na função de exibir comparação");
+
+    // Para capturar erros em produção
+    if (ptr_status_insert == NULL || ptr_status_merge == NULL) {
+        fprintf(stderr, "[ERRO] Estatísticas Inválidas.\n");
+        return;
+    }
+
+    const char *vet_criterios[] = {
+        [POR_VALOR] = "Por Valor",
+        [POR_RASTREIO] = "Por Rastreio"
+    };
+    size_t num_criteiros = sizeof(vet_criterios) / sizeof(char*);
+    const char *criterio = ((size_t)c < num_criteiros)? vet_criterios[c] : "Desconhecido";
+
+    printf("------------------------------------------\n");
+    printf("          Critério: %s\n", criterio);
+    imprimir_estatisticas(ptr_status_insert, "Insertion Sort");
+    imprimir_estatisticas(ptr_status_merge, "Merge Sort");
+}
+
 // TODO: implementar `void exibir_relatorio()` quando a função de imprimir pedido estiver pronta 
-// TODO: implementar `void exibir_resultado_comparacao()`

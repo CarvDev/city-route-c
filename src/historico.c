@@ -6,7 +6,7 @@
 
 Pedido *historico_copiar(const Historico *hist, size_t *ptr_tam) {
     if (hist == NULL || hist->tamanho == 0 || ptr_tam == NULL || 
-        overflow_mul_size(hist->tamanho, sizeof(Pedido))) return NULL;
+        mul_estoura_size(hist->tamanho, sizeof(Pedido))) return NULL;
 
     Pedido *vet_pedidos = malloc(hist->tamanho * sizeof(Pedido));
     if (vet_pedidos == NULL) return NULL;

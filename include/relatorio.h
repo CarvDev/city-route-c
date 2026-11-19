@@ -29,3 +29,14 @@ Pedido *gerar_relatorio_ordenado(const Historico *hist, Criterio c, size_t *ptr_
  */
 void comparar_ordenacoes(const Pedido *vet_base, size_t tam, Criterio c,
     EstatisticasOrdenacao *ptr_status_insert, EstatisticasOrdenacao *ptr_status_merge);
+
+/*
+ * Função : exibir_resultado_comparacao
+ * Complexidade Temporal : O(1)
+ * Imprime no terminal a comparação das estatísticas do Insertion Sort
+ * e do Merge Sort. 
+ * Se um dos ponteiros forem NULL, aborta o código com assert em desenvolvimento 
+ * ou imprime mensagem de erro em produção.
+ */
+void exibir_resultado_comparacao(Criterio c, const EstatisticasOrdenacao *ptr_status_insert, 
+    const EstatisticasOrdenacao *ptr_status_merge);
