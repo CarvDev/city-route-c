@@ -24,9 +24,9 @@
 
 /*
  * Função: mul_estoura_size.
- * Complexidade Temporal : O(1).
- * Retorna valor diferente de zero se a multiplicação a*b exceder SIZE_MAX;
- * caso contrário, retorna 0.
+ * Complexidade Temporal: O(1) no pior caso.
+ * Retorna valor diferente de zero se a*b exceder SIZE_MAX; caso contrário, 0.
+ * Definida como static inline no cabeçalho para otimizar chamadas frequentes.
  */
 static inline int mul_estoura_size(size_t a, size_t b) {
     #ifdef HAVE_BUILTIN_MUL_OVERFLOW // detecção do compilador (mais eficiente)
