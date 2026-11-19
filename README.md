@@ -97,9 +97,9 @@ gcc -fsanitize=address,undefined -g -Iinclude src/*.c -o cityroute
 
 ```c
 /*
- * Funcao : buscar_ponto
- * Complexidade Temporal : O(log n) medio / O(n) pior caso
- * Retorna o ponteiro para o no do ponto de entrega.
+ * Função: buscar_ponto.
+ * Complexidade Temporal: O(log n) médio / O(n) pior caso.
+ * Retorna o ponteiro para o nó do ponto de entrega.
  */
 NoBST *buscar_ponto(NoBST *raiz, int id_ponto);
 ```

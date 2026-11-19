@@ -11,9 +11,8 @@
 typedef int (*FuncaoCompara)(const void *, const void *);
 
 /*
- * Função : merge_sort
- * Complexidade Temporal : O(n log n) comparações e movimentações
- * Complexidade Espacial : O(n) para o vetor auxiliar
+ * Função: merge_sort.
+ * Complexidade Temporal: O(n log n) no pior caso.
  * Ordena o vetor `vet` usando Merge Sort, com elementos de
  * `tam_elemento` bytes comparados por `cmp`. 
  * Retorna as estatísticas da ordenação. Falhas são indicadas por
@@ -25,8 +24,7 @@ EstatisticasOrdenacao merge_sort(void *vet, size_t qtd_elementos,
 
 /*
  * Função : insertion_sort
- * Complexidade Temporal : O(n²) no pior caso e O(n) no caso já ordenado
- * Complexidade Espacial : O(1) além de um elemento temporário
+ * Complexidade Temporal : O(n²) no pior caso.
  * Ordena o vetor `vet` usando Insertion Sort, com elementos de
  * `tam_elemento` bytes comparados por `cmp`. Cada cópia de elemento
  * realizada é contabilizada como uma movimentação.
@@ -38,8 +36,8 @@ EstatisticasOrdenacao insertion_sort(void *vet, size_t qtd_elementos,
     size_t tam_elemento, FuncaoCompara cmp);
 
 /*
- * Função : estatisticas_falharam
- * Complexidade Temporal : O(1)
+ * Função: estatisticas_falharam.
+ * Complexidade Temporal: O(1) no pior caso.
  * Verifica se uma ordenação falhou, ou seja, se `estatisticas` é NULL ou
  * se seu campo `segundos` é negativo.
  * Retorna 1 em caso de falha e 0 caso contrário.
@@ -47,8 +45,8 @@ EstatisticasOrdenacao insertion_sort(void *vet, size_t qtd_elementos,
 int estatisticas_falharam(const EstatisticasOrdenacao *estatisticas);
 
 /*
- * Função : imprimir_estatisticas
- * Complexidade Temporal : O(1)
+ * Função: imprimir_estatisticas.
+ * Complexidade Temporal: O(1) no pior caso.
  * Imprime no terminal as estatísticas de uma ordenação identificadas pelo
  * nome do algoritmo. Se `algoritmo` for NULL, usa um rótulo genérico.
  * Estatísticas com tempo negativo indicam falha e são sinalizadas na saída.
