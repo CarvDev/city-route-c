@@ -1,23 +1,24 @@
-#pragma once
+#ifndef TIPOS_H
+#define TIPOS_H
 
 #include <stddef.h>
 
 typedef struct {
-    int id_ponto;
-    char nome_local[100];
-    double latitude;
-    double longitude;
+    int id_ponto;         /* chave unica */
+    char nome_local[100]; /* bairro ou localidade */
+    double latitude;      /* coordenada geografica */
+    double longitude;     /* coordenada geografica */
 } PontoEntrega;
 
 typedef struct NoBST {
-    PontoEntrega ponto;
-    struct NoBST *esq;
-    struct NoBST *dir;
+    PontoEntrega ponto;   /* dado do no */
+    struct NoBST *esq;    /* filho de chave menor */
+    struct NoBST *dir;    /* filho de chave maior */
 } NoBST;
 
 typedef struct {
     int cod_rastreio;
-    int prioridade; // 1, 2 ou 3
+    int prioridade; /* 1, 2 ou 3 */
     unsigned long ordem_chegada; 
     float peso;
     int id_destino;
@@ -45,3 +46,5 @@ typedef struct {
     unsigned long movimentacoes;
     double segundos;
 } EstatisticasOrdenacao;
+
+#endif /* TIPOS_H */
