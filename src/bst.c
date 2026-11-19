@@ -24,7 +24,7 @@ static NoBST *encontrar_menor(NoBST *no) {
  */
 static NoBST *criar_no(PontoEntrega ponto) {
     /* Aloca memória dinamicamente no heap para o novo nó */
-    NoBST *novo = (NoBST *)malloc(sizeof(NoBST));
+    NoBST *novo = malloc(sizeof(NoBST));
     if (novo == NULL) {
         return NULL;
     }
@@ -198,7 +198,8 @@ NoBST *bst_remover(NoBST *raiz, int id_ponto, int *ok) {
          * 1. Encontra o sucessor em-ordem (menor nó da subárvore direita).
          * 2. Copia os dados do sucessor para o nó corrente (preservando os ponteiros).
          * 3. Remove recursivamente o nó original do sucessor na subárvore direita.
-         * Usa uma flag local (ok_recursivo) para isolar e assegurar que *ok mantenha 1.
+         * O resultado da remoção do sucessor é propagado para *ok, garantindo que
+         * o sucesso só seja sinalizado se a remoção interna também for bem-sucedida.
          */
         {
             NoBST *sucessor = encontrar_menor(raiz->dir);
@@ -206,7 +207,7 @@ NoBST *bst_remover(NoBST *raiz, int id_ponto, int *ok) {
             raiz->ponto = sucessor->ponto;
             raiz->dir = bst_remover(raiz->dir, sucessor->ponto.id_ponto, &ok_recursivo);
             if (ok != NULL) {
-                *ok = 1;
+                *ok = ok_recursivo;
             }
         }
     }

@@ -7,7 +7,9 @@
  * Insere recursivamente um novo PontoEntrega na BST, ordenado por id_ponto.
  * Se a chave já existir, a estrutura não é modificada e define *ok = 0.
  * Em caso de sucesso na inserção, define *ok = 1 e retorna a raiz atualizada.
- * Em caso de falha na alocação de memória, define *ok = 0 e retorna NULL.
+ * Em caso de falha na alocação de memória, define *ok = 0; quando a falha
+ * ocorre na posição de inserção (raiz == NULL) retorna NULL, e quando ocorre
+ * em nível mais profundo os ancestrais mantêm suas subárvores intactas.
  * Valida com segurança se ok != NULL antes de desreferenciar.
  *
  * O(n) pior: BST pode ficar degenerada.
