@@ -1,6 +1,8 @@
 #include "tipos.h"
 #include "utils.h"
 #include "ordenacao.h"
+#include "menu.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -125,18 +127,18 @@ int estatisticas_falharam(const EstatisticasOrdenacao *estatisticas) {
 void imprimir_estatisticas(const EstatisticasOrdenacao *estatisticas, const char *algoritmo) {
     const char *nome = (algoritmo != NULL) ? algoritmo : "Algoritmo não informado";
 
-    printf("------------------------------------------\n");
+    puts(LINHA_PADRAO);
     printf("Estatísticas: %s\n", nome);
-    printf("------------------------------------------\n");
+    puts(LINHA_PADRAO);
 
     if (estatisticas_falharam(estatisticas)) {
         printf("Ordenação não concluída.\n");
-        printf("------------------------------------------\n");
+        puts(LINHA_PADRAO);
         return;
     }
 
     printf("Comparações     : %lu\n", estatisticas->comparacoes);
     printf("Movimentações   : %lu\n", estatisticas->movimentacoes);
     printf("Tempo (s)       : %.6f\n", estatisticas->segundos);
-    printf("------------------------------------------\n");
+    puts(LINHA_PADRAO);
 }
