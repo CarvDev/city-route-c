@@ -3,6 +3,7 @@
 #include "historico.h"
 #include "menu.h"
 #include "ordenacao.h"
+#include "pedido.h"
 #include "relatorio.h"
 #include "tipos.h"
 #include "utils.h"
@@ -77,8 +78,40 @@ static void acao_comparar_algoritmos(struct Sistema *s) {
     free(vet_pedidos);
 }
 
+static void acao_relatorio_ordenado(struct Sistema *s) {
+    if (s->historico->tamanho == 0 || s->historico->inicio == NULL) {
+        fprintf(stderr, "[AVISO] Histórico vazio. ");
+        pausar("Pressione ENTER para continuar...");
+        return;
+    }
+
+    Criterio c;
+    if (!solicitar_criterio(&c)) {
+        fprintf(stderr, "[AVISO] Critério inválido. ");
+        pausar("Pressione ENTER para continuar...");
+        return;
+    }
+
+    size_t tam = 0;
+    Pedido *vet_pedidos = gerar_relatorio_ordenado(s->historico, c, &tam);
+    if (vet_pedidos == NULL) {
+        fprintf(stderr, "[ERRO] Falha ao gerar relatório ordenado\n");
+        pausar("Pressione ENTER para continuar...");
+        return;
+    }
+
+    puts(LINHA_PADRAO);
+    imprimir_cabecalho_pedidos();
+    for (size_t i = 0; i < tam; i++) {
+        imprimir_pedido(&vet_pedidos[i]);
+    }
+    puts(LINHA_PADRAO);
+    free(vet_pedidos);
+    pausar("Pressione ENTER para continuar...");
+}
+
 static const ItemMenu ITENS_RELATORIOS[] = {
-    { "Relatório ordenado",                NULL },
+    { "Relatório ordenado",                acao_relatorio_ordenado },
     { "Comparar algoritmos de ordenação",  acao_comparar_algoritmos},
     { "Carga inicial automatizada",        NULL }
 };
