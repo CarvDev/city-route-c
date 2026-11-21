@@ -3,9 +3,7 @@
 #include "tipos.h"
 #include "historico.h" 
 #include "utils.h"
-#include <stddef.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include <math.h>
@@ -41,7 +39,7 @@ static int compara_valor(const void *a, const void *b) {
 }
 
 // Obtém a função de comparação com base no critério fornecido
-static FuncaoCompara get_funcao_cmp(Criterio c) {
+FuncaoCompara get_funcao_cmp(Criterio c) {
     FuncaoCompara funcs[] = {
         [POR_RASTREIO] = compara_cod_rastreio,
         [POR_VALOR] = compara_valor
@@ -112,32 +110,6 @@ void comparar_ordenacoes(const Pedido *vet_base, size_t tam, Criterio c,
 
     free(vet_merge);
     free(vet_insert);
-}
-
-void exibir_resultado_comparacao(Criterio c, const EstatisticasOrdenacao *ptr_status_insert, 
-    const EstatisticasOrdenacao *ptr_status_merge) 
-{
-    // Para capturar os erros em desenvolvimento
-    assert(ptr_status_insert != NULL && "ptr_status_insert é NULL na função de exibir comparação");
-    assert(ptr_status_merge != NULL && "ptr_status_merge é NULL na função de exibir comparação");
-
-    // Para capturar erros em produção
-    if (ptr_status_insert == NULL || ptr_status_merge == NULL) {
-        fprintf(stderr, "[ERRO] Estatísticas Inválidas.\n");
-        return;
-    }
-
-    const char *vet_criterios[] = {
-        [POR_VALOR] = "Por Valor",
-        [POR_RASTREIO] = "Por Rastreio"
-    };
-    size_t num_criteiros = sizeof(vet_criterios) / sizeof(char*);
-    const char *criterio = ((size_t)c < num_criteiros)? vet_criterios[c] : "Desconhecido";
-
-    printf("------------------------------------------\n");
-    printf("          Critério: %s\n", criterio);
-    imprimir_estatisticas(ptr_status_insert, "Insertion Sort");
-    imprimir_estatisticas(ptr_status_merge, "Merge Sort");
 }
 
 // TODO: implementar `void exibir_relatorio()` quando a função de imprimir pedido estiver pronta 

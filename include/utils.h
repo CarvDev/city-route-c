@@ -10,6 +10,14 @@
  * Funções static inline são implementadas direto no .h. Não é um erro.
 */
 
+
+/*
+ * Macro para obter o número de intes de um vetor ESTÁTICO.
+ * Obs: não funciona para vetores dinâmicos ou que sofreram 
+ * array decay (se tornaram ponteiros para o primeiro elemento).
+*/
+#define NUM_ITENS(vet) (sizeof(vet) / sizeof((vet)[0]))
+
 /*
  * Otimização para GCC/compiladores compatíveis:
  * Com __has_builtin, detecta suporte a __builtin_mul_overflow e habilita 

@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 #include "tipos.h"
+#include "ordenacao.h"
 
 /*
  * Função: gerar_relatorio_ordenado.
@@ -16,6 +17,15 @@
 Pedido *gerar_relatorio_ordenado(const Historico *hist, Criterio c, size_t *ptr_tam);
 
 /*
+ * Função: get_funcao_cmp.
+ * Complexidade Temporal: O(1) no pior caso.
+ * Retorna a função de comparação correspondente ao critério `c`
+ * (`POR_RASTREIO` ou `POR_VALOR`).
+ * Retorna NULL se o critério for inválido.
+ */
+FuncaoCompara get_funcao_cmp(Criterio c);
+
+/*
  * Função: comparar_ordenacoes.
  * Complexidade Temporal: O(n²) no pior caso, dominado pelo Insertion Sort.
  * Ordena duas cópias de `vet_base`, uma com Insertion Sort e outra com
@@ -27,13 +37,3 @@ Pedido *gerar_relatorio_ordenado(const Historico *hist, Criterio c, size_t *ptr_
  */
 void comparar_ordenacoes(const Pedido *vet_base, size_t tam, Criterio c,
     EstatisticasOrdenacao *ptr_status_insert, EstatisticasOrdenacao *ptr_status_merge);
-
-/*
- * Função: exibir_resultado_comparacao.
- * Complexidade Temporal: O(1) no pior caso.
- * Exibe no terminal a comparação entre as estatísticas de Insertion Sort e Merge Sort.
- * Informa o critério usado, se passado corretamente para a função.
- * Se um dos ponteiros forem NULL, imprime mensagem de erro.
- */
-void exibir_resultado_comparacao(Criterio c, const EstatisticasOrdenacao *ptr_status_insert, 
-    const EstatisticasOrdenacao *ptr_status_merge);
