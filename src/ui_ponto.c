@@ -16,8 +16,7 @@ static void acao_cadastrar_ponto(struct Sistema *s) {
     PontoEntrega p = {0};
 
     printf("ID do ponto: ");
-    p.id_ponto = ler_inteiro();
-    if (p.id_ponto == INT_MIN) {
+    if (!ler_int(&p.id_ponto)) {
         fprintf(stderr, "[AVISO] ID inválido. ");
         pausar(PAUSA_PADRAO);
         return;
@@ -66,8 +65,8 @@ static void acao_cadastrar_ponto(struct Sistema *s) {
 
 static void acao_buscar_ponto(struct Sistema *s) {
     printf("ID do ponto: ");
-    int id = ler_inteiro();
-    if (id == INT_MIN) {
+    int id;
+    if (!ler_int(&id)) {
         fprintf(stderr, "[AVISO] ID inválido. ");
         pausar(PAUSA_PADRAO);
         return;
@@ -101,8 +100,8 @@ static void acao_listar_pontos(struct Sistema *s) {
 
 static void acao_excluir_ponto(struct Sistema *s) {
     printf("ID do ponto: ");
-    int id = ler_inteiro();
-    if (id == INT_MIN) {
+    int id;
+    if (!ler_int(&id)) {
         fprintf(stderr, "[AVISO] ID inválido. ");
         pausar(PAUSA_PADRAO);
         return;

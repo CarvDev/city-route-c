@@ -3,8 +3,17 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
+#include <stdlib.h>
 
+/*
+  * Valida se a string não é vazia percorrendo
+  * seus caracteres e verificando se pelo menos 
+  * um deles não é um espaço em branco.
+*/
 static int string_vazia(const char *s) {
+    if (s == NULL) return 1;
+
     for (; *s != '\0'; s++) {
         if (!isspace((unsigned char)*s)) return 0;
     }
@@ -19,6 +28,8 @@ void limpar_buffer(void) {
 }
 
 int ler_string(char *dest, size_t tam) {
+    if (dest == NULL) return 0;
+
     // O tamanho da string precisa ser maior que 0
     // e caber em int, pois é o que fgets recebe
     if (tam <= 0 || tam > INT_MAX) return 0;
@@ -41,24 +52,36 @@ int ler_string(char *dest, size_t tam) {
     return !string_vazia(dest);
 }
 
-int ler_inteiro(void) {
-    int valor;
-    if (scanf("%d", &valor) != 1) {
-        valor = INT_MIN; // define INT_MIN como código de erro
+int ler_int(int *dest) {
+    if (dest == NULL) return 0;
+
+    char buf[64];
+    if (!fgets(buf, sizeof(buf), stdin)) {
+        return 0; // EOF ou erro de leitura
     }
 
-    /*
-     Obs: para o estado atual do sistema essa função funciona, mas pode ser 
-      necessário refatorá-la mais pra frente. 
-      
-     Problemas que ela possui: 
-       * INT_MIN pode ser um valor de entrada válido, então não seria o código 
-        de erro ideal 
-       * scanf("%d") tem comportamento indefinido em overflow.
-    */
+    if (strchr(buf, '\n') == NULL && !feof(stdin)) {
+        limpar_buffer();
+        return 0; // Linha maior que o buffer
+    }
 
-    limpar_buffer();
-    return valor;
+    // Converte o número
+    char *fim;
+    errno = 0;
+    long v = strtol(buf, &fim, 10);
+
+    // Verifica se algum dígito foi lido 
+    if (fim == buf) {
+        return 0;
+    }
+
+    // Verifica limites do tipo int
+    if (errno == ERANGE || v < INT_MIN || v > INT_MAX) {
+        return 0;
+    }
+
+    *dest = (int)v;
+    return 1;
 }
 
 int ler_double(double *dest) {

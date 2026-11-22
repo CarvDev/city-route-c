@@ -43,7 +43,9 @@ static int solicitar_criterio(Criterio *c) {
     printf("2 - Por Valor\n");
     exibir_prompt();
 
-    switch (ler_inteiro()) {
+    int c_lido;
+    if (!ler_int(&c_lido)) return 0;
+    switch (c_lido) {
         case 1: *c = POR_RASTREIO; return 1;
         case 2: *c = POR_VALOR;    return 1;
         default:                   return 0;

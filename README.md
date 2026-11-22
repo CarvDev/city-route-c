@@ -125,16 +125,16 @@ NoBST *buscar_ponto(NoBST *raiz, int id_ponto);
 
 ## 8. Checklist
 
-- [ ] BST: inserir, buscar, listar (in-order) e excluir (3 casos), tudo recursivo
+- [x] BST: inserir, buscar, listar (in-order) e excluir (3 casos), tudo recursivo
 - [ ] Exclusão de ponto bloqueada se houver pedidos pendentes
 - [ ] Heap com prioridade + desempate FIFO
 - [ ] Validação de `id_destino` ao inserir pedido
 - [ ] Histórico com registro, listagem e busca por código
-- [ ] Ordenação O(n²) e O(n log n) sobre cópias dos dados
+- [x] Ordenação O(n²) e O(n log n) sobre cópias dos dados
 - [ ] Comparação de algoritmos para N = 100, 1.000 e 10.000
 - [ ] Carga automática de dados de teste
-- [ ] Complexidade comentada em todas as funções dos `.h`
-- [ ] Sem warnings, sem segfaults, sem vazamentos de memória
+- [x] Complexidade comentada em todas as funções dos `.h`
+- [x] Sem warnings, sem segfaults, sem vazamentos de memória
 - [ ] Relatório técnico em PDF
 
 ## 9. Autoria

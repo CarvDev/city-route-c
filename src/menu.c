@@ -58,7 +58,12 @@ void executar_menu(const char *titulo, const ItemMenu *itens,
         puts(LINHA_PADRAO);
 
         exibir_prompt();
-        int opcao = ler_inteiro();
+        int opcao;
+        if (!ler_int(&opcao)) {
+            fprintf(stderr, "[ERRO] Falha na leitura da opção\n");
+            pausar(PAUSA_PADRAO);
+            continue;
+        }
 
         if (opcao == 0) {
             return;
@@ -75,7 +80,7 @@ void executar_menu(const char *titulo, const ItemMenu *itens,
         }
 
         fprintf(stderr, "[AVISO] Opção inválida. ");
-        pausar("Pressione ENTER para continuar... ");
+        pausar(PAUSA_PADRAO);
     }
 }
 
