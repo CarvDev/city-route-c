@@ -53,7 +53,7 @@ static int solicitar_criterio(Criterio *c) {
 static void acao_comparar_algoritmos(struct Sistema *s) {
     if(s->historico->tamanho == 0 || s->historico->inicio == NULL) {
         fprintf(stderr, "[AVISO] Histórico vazio. ");
-        pausar("Pressione ENTER para continuar...");
+        pausar(PAUSA_PADRAO);
         return;
     }
 
@@ -62,7 +62,7 @@ static void acao_comparar_algoritmos(struct Sistema *s) {
     EstatisticasOrdenacao status_merge = {0};
     if (!solicitar_criterio(&c)) {
         fprintf(stderr, "[AVISO] Critério inválido. ");
-        pausar("Pressione ENTER para continuar...");
+        pausar(PAUSA_PADRAO);
         return;
     }
 
@@ -81,14 +81,14 @@ static void acao_comparar_algoritmos(struct Sistema *s) {
 static void acao_relatorio_ordenado(struct Sistema *s) {
     if (s->historico->tamanho == 0 || s->historico->inicio == NULL) {
         fprintf(stderr, "[AVISO] Histórico vazio. ");
-        pausar("Pressione ENTER para continuar...");
+        pausar(PAUSA_PADRAO);
         return;
     }
 
     Criterio c;
     if (!solicitar_criterio(&c)) {
         fprintf(stderr, "[AVISO] Critério inválido. ");
-        pausar("Pressione ENTER para continuar...");
+        pausar(PAUSA_PADRAO);
         return;
     }
 
@@ -96,7 +96,7 @@ static void acao_relatorio_ordenado(struct Sistema *s) {
     Pedido *vet_pedidos = gerar_relatorio_ordenado(s->historico, c, &tam);
     if (vet_pedidos == NULL) {
         fprintf(stderr, "[ERRO] Falha ao gerar relatório ordenado\n");
-        pausar("Pressione ENTER para continuar...");
+        pausar(PAUSA_PADRAO);
         return;
     }
 
@@ -107,7 +107,7 @@ static void acao_relatorio_ordenado(struct Sistema *s) {
     }
     puts(LINHA_PADRAO);
     free(vet_pedidos);
-    pausar("Pressione ENTER para continuar...");
+    pausar(PAUSA_PADRAO);
 }
 
 static const ItemMenu ITENS_RELATORIOS[] = {

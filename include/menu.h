@@ -3,6 +3,7 @@
 #include "sistema.h"
 
 #define LINHA_PADRAO "------------------------------------------"
+#define PAUSA_PADRAO "Pressione ENTER para continuar..."
 
 typedef void (*Acao)(struct Sistema *); // para passar o estado do sistema ao menu
 
