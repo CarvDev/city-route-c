@@ -1,4 +1,5 @@
 #include "sistema.h"
+#include "bst.h"
 #include <stdlib.h>
 
 int sistema_iniciar(Sistema *s) {
@@ -16,6 +17,7 @@ int sistema_iniciar(Sistema *s) {
 void sistema_encerrar(Sistema *s) {
     if (s == NULL) return;
 
+    bst_liberar(s->pontos);
     free(s->fila.dados);
     free(s->historico);
 

@@ -43,7 +43,9 @@ static int solicitar_criterio(Criterio *c) {
     printf("2 - Por Valor\n");
     exibir_prompt();
 
-    switch (ler_inteiro()) {
+    int c_lido;
+    if (!ler_int(&c_lido)) return 0;
+    switch (c_lido) {
         case 1: *c = POR_RASTREIO; return 1;
         case 2: *c = POR_VALOR;    return 1;
         default:                   return 0;
@@ -53,7 +55,7 @@ static int solicitar_criterio(Criterio *c) {
 static void acao_comparar_algoritmos(struct Sistema *s) {
     if(s->historico->tamanho == 0 || s->historico->inicio == NULL) {
         fprintf(stderr, "[AVISO] Histórico vazio. ");
-        pausar("Pressione ENTER para continuar...");
+        pausar(PAUSA_PADRAO);
         return;
     }
 
@@ -62,7 +64,7 @@ static void acao_comparar_algoritmos(struct Sistema *s) {
     EstatisticasOrdenacao status_merge = {0};
     if (!solicitar_criterio(&c)) {
         fprintf(stderr, "[AVISO] Critério inválido. ");
-        pausar("Pressione ENTER para continuar...");
+        pausar(PAUSA_PADRAO);
         return;
     }
 
@@ -81,14 +83,14 @@ static void acao_comparar_algoritmos(struct Sistema *s) {
 static void acao_relatorio_ordenado(struct Sistema *s) {
     if (s->historico->tamanho == 0 || s->historico->inicio == NULL) {
         fprintf(stderr, "[AVISO] Histórico vazio. ");
-        pausar("Pressione ENTER para continuar...");
+        pausar(PAUSA_PADRAO);
         return;
     }
 
     Criterio c;
     if (!solicitar_criterio(&c)) {
         fprintf(stderr, "[AVISO] Critério inválido. ");
-        pausar("Pressione ENTER para continuar...");
+        pausar(PAUSA_PADRAO);
         return;
     }
 
@@ -96,7 +98,7 @@ static void acao_relatorio_ordenado(struct Sistema *s) {
     Pedido *vet_pedidos = gerar_relatorio_ordenado(s->historico, c, &tam);
     if (vet_pedidos == NULL) {
         fprintf(stderr, "[ERRO] Falha ao gerar relatório ordenado\n");
-        pausar("Pressione ENTER para continuar...");
+        pausar(PAUSA_PADRAO);
         return;
     }
 
@@ -107,7 +109,7 @@ static void acao_relatorio_ordenado(struct Sistema *s) {
     }
     puts(LINHA_PADRAO);
     free(vet_pedidos);
-    pausar("Pressione ENTER para continuar...");
+    pausar(PAUSA_PADRAO);
 }
 
 static const ItemMenu ITENS_RELATORIOS[] = {
