@@ -4,7 +4,6 @@
 #include "menu.h"
 #include "utils.h"
 
-#include <limits.h>
 #include <stdio.h>
 
 static void exibir_ponto(const PontoEntrega *p) {
@@ -53,6 +52,7 @@ static void acao_cadastrar_ponto(struct Sistema *s) {
 
     int ok = 0;
     s->pontos = bst_inserir(s->pontos, p, &ok);
+
     if (!ok) {
         fprintf(stderr, "[ERRO] Falha ao alocar memória para o ponto.\n");
         pausar(PAUSA_PADRAO);
@@ -64,8 +64,9 @@ static void acao_cadastrar_ponto(struct Sistema *s) {
 }
 
 static void acao_buscar_ponto(struct Sistema *s) {
-    printf("ID do ponto: ");
     int id;
+
+    printf("ID do ponto: ");
     if (!ler_int(&id)) {
         fprintf(stderr, "[AVISO] ID inválido. ");
         pausar(PAUSA_PADRAO);
@@ -80,7 +81,7 @@ static void acao_buscar_ponto(struct Sistema *s) {
     }
 
     puts(LINHA_PADRAO);
-    exibir_ponto(&(no->ponto));
+    exibir_ponto(&no->ponto);
     puts(LINHA_PADRAO);
     pausar(PAUSA_PADRAO);
 }
@@ -99,18 +100,17 @@ static void acao_listar_pontos(struct Sistema *s) {
 }
 
 static void acao_excluir_ponto(struct Sistema *s) {
-    printf("ID do ponto: ");
     int id;
+
+    printf("ID do ponto: ");
     if (!ler_int(&id)) {
         fprintf(stderr, "[AVISO] ID inválido. ");
         pausar(PAUSA_PADRAO);
         return;
     }
 
-    int ok = 0;
-    s->pontos = bst_remover(s->pontos, id, &ok);
-    if (!ok) {
-        fprintf(stderr, "[AVISO] Ponto não encontrado. ");
+    if (!sistema_excluir_ponto(s, id)) {
+        fprintf(stderr, "[AVISO] Ponto inexistente ou com pedidos pendentes. ");
         pausar(PAUSA_PADRAO);
         return;
     }
@@ -120,10 +120,10 @@ static void acao_excluir_ponto(struct Sistema *s) {
 }
 
 static const ItemMenu ITENS_PONTOS[] = {
-    { "Cadastrar ponto",           acao_cadastrar_ponto },
-    { "Buscar ponto por código",   acao_buscar_ponto },
-    { "Listar pontos em ordem",    acao_listar_pontos },
-    { "Excluir ponto",             acao_excluir_ponto }
+    { "Cadastrar ponto",         acao_cadastrar_ponto },
+    { "Buscar ponto por código", acao_buscar_ponto },
+    { "Listar pontos em ordem",   acao_listar_pontos },
+    { "Excluir ponto",            acao_excluir_ponto }
 };
 
 void menu_pontos_entrega(struct Sistema *s) {
