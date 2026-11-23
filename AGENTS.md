@@ -69,7 +69,8 @@ Os testes usam assert. Nunca compilá-los com -DNDEBUG.
   estrita e, quando conveniente, `valgrind`/sanitizers.
 - Sem castings no retorno de malloc/calloc.   
 - sistema.c guarda as regras de negócio e não lê do teclado nem imprime.
-- Os TADs não leem do usuário. Ações de I/O ficam em ui_*.c.
+- Os TADs não devem realizar I/O por conta própria, no entanto podem 
+  implementar funções de I/O para serem chamadas em ui_*.c.
 - heap e ordenações são feitos pela equipe, sem qsort, bsearch ou 
   bibliotecas de fila. 
 - O relatório (RF11) ordena sempre uma cópia, sem alterar o histórico.
