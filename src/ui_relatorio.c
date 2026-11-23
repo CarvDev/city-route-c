@@ -112,10 +112,73 @@ static void acao_relatorio_ordenado(struct Sistema *s) {
     pausar(PAUSA_PADRAO);
 }
 
+static int sistema_tem_dados(const struct Sistema *s) {
+    if (s->pontos != NULL) return 1;
+    if (s->fila.tamanho > 0) return 1;
+    if (s->historico != NULL && s->historico->tamanho > 0) return 1;
+    return 0;
+}
+
+static int confirmar_substituicao(void) {
+    char resposta[8];
+
+    fprintf(stderr, "[AVISO] A carga apagará todos os dados atuais. ");
+    printf("Confirmar? (S/N): ");
+    if (!ler_string(resposta, sizeof resposta)) return 0;
+
+    return resposta[0] == 's' || resposta[0] == 'S';
+}
+
+static int solicitar_quantidade_carga(size_t *qtd) {
+    puts(LINHA_PADRAO);
+    printf("Quantidade de pontos e pedidos:\n");
+    printf("1 - 100\n");
+    printf("2 - 1.000\n");
+    printf("3 - 10.000\n");
+    exibir_prompt();
+
+    int opcao;
+    if (!ler_int(&opcao)) return 0;
+
+    switch (opcao) {
+        case 1: *qtd = 100;   return 1;
+        case 2: *qtd = 1000;  return 1;
+        case 3: *qtd = 10000; return 1;
+        default:              return 0;
+    }
+}
+
+static void acao_carga_teste(struct Sistema *s) {
+    if (sistema_tem_dados(s) && !confirmar_substituicao()) {
+        fprintf(stderr, "[AVISO] Operação cancelada. ");
+        pausar(PAUSA_PADRAO);
+        return;
+    }
+
+    size_t qtd;
+    if (!solicitar_quantidade_carga(&qtd)) {
+        fprintf(stderr, "[AVISO] Quantidade inválida. ");
+        pausar(PAUSA_PADRAO);
+        return;
+    }
+
+    if (!sistema_carga_teste(s, qtd, qtd)) {
+        fprintf(stderr, "[ERRO] Falha ao gerar a carga inicial. ");
+        pausar(PAUSA_PADRAO);
+        return;
+    }
+
+    puts(LINHA_PADRAO);
+    printf("[OK] Carga gerada: %zu pontos, %zu pedidos pendentes e "
+        "%zu despachados.\n", qtd, s->fila.tamanho, s->historico->tamanho);
+    puts(LINHA_PADRAO);
+    pausar(PAUSA_PADRAO);
+}
+
 static const ItemMenu ITENS_RELATORIOS[] = {
     { "Relatório ordenado",                acao_relatorio_ordenado },
     { "Comparar algoritmos de ordenação",  acao_comparar_algoritmos},
-    { "Carga inicial automatizada",        NULL }
+    { "Carga inicial automatizada",        acao_carga_teste }
 };
 
 void menu_relatorios(struct Sistema *s) {
