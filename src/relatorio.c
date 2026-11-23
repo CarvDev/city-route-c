@@ -92,7 +92,7 @@ void comparar_ordenacoes(const Pedido *vet_base, size_t tam, Criterio c,
 
     unsigned char erro_alocacao = 0;
     erro_alocacao |= (vet_merge == NULL);
-    erro_alocacao |= (vet_merge == NULL);
+    erro_alocacao |= (vet_insert == NULL);
 
     if (erro_alocacao) {
         *ptr_status_insert = (EstatisticasOrdenacao){.segundos = -1};

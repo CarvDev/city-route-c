@@ -132,7 +132,7 @@ NoBST *buscar_ponto(NoBST *raiz, int id_ponto);
 - [x] Histórico com registro, listagem e busca por código
 - [x] Ordenação O(n²) e O(n log n) sobre cópias dos dados
 - [ ] Comparação de algoritmos para N = 100, 1.000 e 10.000
-- [ ] Carga automática de dados de teste
+- [x] Carga automática de dados de teste
 - [x] Complexidade comentada em todas as funções dos `.h`
 - [x] Sem warnings, sem segfaults, sem vazamentos de memória
 - [ ] Relatório técnico em PDF
