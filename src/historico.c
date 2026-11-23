@@ -1,9 +1,9 @@
 #include "historico.h"
+#include "pedido.h"
 #include "tipos.h"
 #include "utils.h"
 #include <stddef.h>
 #include <stdlib.h>
-#include "pedido.h"
 
 Pedido *historico_copiar(const Historico *hist, size_t *ptr_tam) {
     if (hist == NULL || hist->tamanho == 0 || ptr_tam == NULL || 
