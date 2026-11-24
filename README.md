@@ -8,35 +8,35 @@ Professora: Luenne Nailam
 
 ## 1. Sobre o projeto
 
-O **CityRoute C** é um sistema simplificado, escrito em **C**, que simula uma central de distribuição urbana. Ele recebe pedidos de entrega, organiza a ordem de atendimento por prioridade, localiza os pontos de destino e mantém um histórico das entregas processadas, além de gerar relatórios ordenados e comparar o desempenho de algoritmos de ordenação.
+O **CityRoute C** é um sistema modular, escrito em **C11**, que simula uma central de distribuição urbana. Ele recebe pedidos de entrega, organiza a ordem de atendimento por prioridade, localiza os pontos de destino e mantém um histórico das entregas processadas, além de gerar relatórios ordenados e comparar o desempenho de algoritmos de ordenação.
 
 Cada módulo utiliza a estrutura de dados mais adequada à operação que realiza:
 
 | Estrutura / Técnica | Aplicação no sistema |
 |---------------------|----------------------|
-| Árvore Binária de Busca (BST) | Cadastro, exclusão, busca e percurso dos pontos de entrega |
-| Heap Binário | Fila de prioridade dos pedidos pendentes |
-| Lista Encadeada / Vetor Dinâmico | Histórico de pedidos despachados |
-| Recursividade | Inserção, busca, exclusão e percurso na BST |
-| Algoritmo O(n²) | Ordenação do relatório (Bubble, Insertion ou Selection Sort) |
-| Algoritmo O(n log n) | Ordenação de alto desempenho (Quick ou Merge Sort) |
+| Árvore Binária de Busca (BST) | Cadastro, exclusão, busca e percurso em-ordem dos pontos de entrega |
+| Heap Binário Mínimo | Fila de prioridade dos pedidos pendentes (com desempate FIFO) |
+| Lista Simplesmente Encadeada (início e fim) | Histórico de pedidos despachados com inserção $O(1)$ ao final |
+| Recursividade | Inserção, busca, exclusão, percurso em-ordem e liberação na BST |
+| Insertion Sort ($O(n^2)$) | Algoritmo quadrático utilizado na comparação de desempenho |
+| Merge Sort ($O(n \log n)$) | Ordenação dos relatórios e comparação de desempenho |
 
 ## 2. Entidades
 
-**Ponto de Entrega**
+**Ponto de Entrega (`PontoEntrega`)**
 
-- `id_ponto` (int): código único
-- `nome_local` (string): bairro ou localidade
-- `latitude`, `longitude` (double): coordenadas geográficas
+- `id_ponto` (`int`): código único na BST
+- `nome_local` (`char[100]`): bairro ou localidade
+- `latitude`, `longitude` (`double`): coordenadas geográficas
 
-**Pedido de Entrega**
+**Pedido de Entrega (`Pedido`)**
 
-- `cod_rastreio` (int ou string): identificador único
-- `prioridade` (int): 1 = Expressa, 2 = VIP, 3 = Convencional
-- `ordem_chegada` (unsigned long): contador incremental (desempate FIFO)
-- `peso` (float): peso em kg
-- `id_destino` (int): código de um ponto cadastrado
-- `valor` (float): valor monetário do pedido
+- `cod_rastreio` (`int`): identificador único do pedido
+- `prioridade` (`int`): `1` = Expressa, `2` = VIP, `3` = Convencional
+- `ordem_chegada` (`unsigned long`): contador incremental (desempate FIFO)
+- `peso` (`float`): peso em kg
+- `id_destino` (`int`): código de um ponto cadastrado na BST
+- `valor` (`float`): valor monetário do pedido
 
 ## 3. Funcionalidades
 
@@ -47,30 +47,77 @@ Cada módulo utiliza a estrutura de dados mais adequada à operação que realiz
 - **RF03** – Listar pontos em ordem crescente (percurso *in-order*)
 - **RF03.1** – Excluir ponto (folha, 1 filho, 2 filhos); bloqueado se houver pedidos pendentes vinculados
 
-### Módulo 2 — Pedidos (Heap / Fila de Prioridade)
+### Módulo 2 — Pedidos (Heap Binário Mínimo)
 
 - **RF04** – Inserir pedido (valida se `id_destino` existe na BST)
 - **RF05** – Consultar próximo pedido sem removê-lo
-- **RF06** – Processar despacho (remove o topo do heap e registra no histórico)
-- **RF07** – Exibir pedidos pendentes (conforme a estrutura do heap)
+- **RF06** – Processar despacho (remove o topo do heap e registra no histórico com tratamento de falhas)
+- **RF07** – Exibir pedidos pendentes (conforme a disposição interna do heap)
 
-Regra de prioridade: Expressa > VIP > Convencional. Empate resolvido por FIFO (menor `ordem_chegada` primeiro).
+Regra de prioridade: Expressa (`1`) > VIP (`2`) > Convencional (`3`). Empate resolvido por FIFO (menor `ordem_chegada` primeiro).
 
-### Módulo 3 — Histórico (Lista Encadeada ou Vetor Dinâmico)
+### Módulo 3 — Histórico (Lista Simplesmente Encadeada)
 
-- **RF08** – Registrar pedido processado
+- **RF08** – Registrar pedido processado ao final da lista em $O(1)$
 - **RF09** – Consultar histórico completo
 - **RF10** – Buscar pedido no histórico por código de rastreio
 
 ### Módulo 4 — Relatórios, Carga de Dados e Ordenação
 
-- **RF11** – Relatório ordenado (por código de rastreio ou valor), sobre **cópia** do histórico
-- **RF12** – Comparar algoritmos O(n²) × O(n log n): tempo (`<time.h>`) e nº de comparações/trocas para N = 100, 1.000 e 10.000
-- **RF13** – Carga inicial automatizada com dados aleatórios para testes de estresse
+- **RF11** – Gerar relatório ordenado com **Merge Sort** (por código de rastreio ou valor), sobre **cópia** independente do histórico
+- **RF12** – Comparar **Insertion Sort** ($O(n^2)$) $\times$ **Merge Sort** ($O(n \log n)$): tempo (`<time.h>`), número de comparações e número de movimentações para $N = 100$, $1.000$ e $10.000$
+- **RF13** – Carga inicial automatizada com pontos e pedidos de teste
 
-## 4. Compilação e execução
+## 4. Estrutura do projeto
 
-Requisitos: compilador C (GCC ou Clang)
+```text
+.
+├── .github/
+│   └── workflows/
+│       └── build.yml        # CI: recusa PR com erros/warnings
+├── include/                 # Cabeçalhos (.h)
+│   ├── bst.h
+│   ├── entrada.h
+│   ├── heap.h
+│   ├── historico.h
+│   ├── menu.h
+│   ├── ordenacao.h
+│   ├── pedido.h
+│   ├── relatorio.h
+│   ├── sistema.h
+│   ├── tipos.h
+│   ├── ui_historico.h
+│   ├── ui_pedido.h
+│   ├── ui_ponto.h
+│   ├── ui_relatorio.h
+│   └── utils.h
+├── src/                     # Implementações (.c)
+│   ├── bst.c
+│   ├── entrada.c
+│   ├── heap.c
+│   ├── historico.c
+│   ├── main.c
+│   ├── menu.c
+│   ├── ordenacao.c
+│   ├── pedido.c
+│   ├── relatorio.c
+│   ├── sistema.c
+│   ├── ui_historico.c
+│   ├── ui_pedido.c
+│   ├── ui_ponto.c
+│   └── ui_relatorio.c
+├── tests/                   # Testes unitários
+│   └── test_bst.c
+├── .gitignore
+├── AGENTS.md
+├── LICENSE                  # Licença MIT
+└── README.md
+```
+## 5. Compilação, execução e CI
+
+**Requisitos:** compilador C com suporte a C11 (GCC ou Clang recomendados).
+
+### Programa principal
 
 ```bash
 gcc -Wall -Wextra -pedantic -std=c11 -Iinclude src/*.c -o cityroute
@@ -81,65 +128,119 @@ O programa deve compilar **sem warnings**. Para verificar vazamentos e acessos i
 
 ```bash
 valgrind --leak-check=full ./cityroute
-# ou
-gcc -fsanitize=address,undefined -g -Iinclude src/*.c -o cityroute
+# ou com sanitizers:
+gcc -Wall -Wextra -pedantic -std=c11 -fsanitize=address,undefined -g -Iinclude src/*.c -o cityroute
+./cityroute
 ```
 
-## 5. Requisitos técnicos
+### Testes unitários
 
-- C ANSI, modularizado em arquivos `.h` e `.c`
+Os testes devem ser compilados **sem** a macro `NDEBUG` (`-UNDEBUG`) para manter todas as asserções (`assert`) ativas:
+
+```bash
+gcc -Wall -Wextra -pedantic -std=c11 -g -O0 -UNDEBUG -fsanitize=address,undefined -Iinclude tests/test_bst.c src/bst.c -o test_bst
+./test_bst
+```
+
+### Integração Contínua (GitHub Actions)
+
+O repositório conta com o workflow `.github/workflows/build.yml`, executado automaticamente sempre que um **Pull Request** é aberto ou atualizado. Caso a compilação gere qualquer erro ou *warning*, o Pull Request é recusado automaticamente.
+
+## 6. Requisitos técnicos
+
+- **C11** (ISO/IEC 9899:2011), modularizado em arquivos `.h` e `.c`
 - Alocação dinâmica obrigatória; **proibido** usar vetores estáticos para estruturas dinâmicas
 - Toda memória alocada deve ser liberada (ao remover nós e ao encerrar o programa)
-- BST com nós encadeados e operações **recursivas** (inserção, busca, remoção, percurso)
-- Heap e algoritmos de ordenação implementados pelos próprios estudantes
-- Segmentation Fault resulta em penalização
-- Cada função declarada em `.h` deve ter comentário com a **complexidade temporal no pior caso**. Ex:
+- BST com nós encadeados e operações **recursivas** (inserção, busca, remoção, percurso e liberação)
+- Heap binário mínimo e algoritmos de ordenação implementados pelos próprios estudantes
+- Validação rigorosa de entradas, ponteiros nulos, overflow numérico e falhas de alocação
+- *Segmentation Fault* resulta em penalização
+- Cada função declarada em `.h` deve ter comentário com a **complexidade temporal no pior caso**. Exemplo (`include/bst.h`):
 
 ```c
 /*
- * Função: buscar_ponto.
- * Complexidade Temporal: O(log n) médio / O(n) pior caso.
- * Retorna o ponteiro para o nó do ponto de entrega.
+ * Realiza a busca recursiva de um ponto de entrega pelo seu id_ponto.
+ * Explora as propriedades da BST (menores a esquerda, maiores a direita).
+ * Retorna ponteiro constante para o no correspondente ou NULL se nao existir.
+ *
+ * O(n) pior: busca recursiva por id_ponto.
  */
-NoBST *buscar_ponto(NoBST *raiz, int id_ponto);
+const NoBST *bst_buscar(const NoBST *raiz, int id_ponto);
 ```
 
-## 6. Etapas e avaliação
+## 7. Etapas e avaliação
 
-| Etapa | Entrega | Peso |
-|-------|---------|------|
-| 1. Modelagem e TADs | PDF com requisitos, protótipo das structs e arquivos `.h` com complexidades comentadas | 15% |
-| 2. Implementação e Integração | Código-fonte funcional e modularizado com menu interativo integrando BST, Heap e Histórico | 45% |
-| 3. Testes, Relatório e Defesa Oral | Relatório técnico em PDF (gráficos/tabelas de desempenho e análise Big-O) + apresentação no laboratório em **07/12**, com perguntas individuais | 40% |
+| Etapa | Data | Entrega | Peso |
+|-------|------|---------|------|
+| 1. Modelagem e TADs | 23/11 | PDF com requisitos, protótipo das structs e arquivos `.h` com complexidades comentadas | 15% |
+| 2. Implementação e Integração | 03/12 | Código-fonte funcional e modularizado com menu interativo integrando BST, Heap e Histórico | 45% |
+| 3. Testes, Relatório e Defesa Oral | 07/12 | Testes unitários, relatório técnico em PDF e apresentação no laboratório com perguntas individuais | 40% |
 
-## 7. Análise de desempenho (preencher na Etapa 3)
+## 8. Análise de desempenho (a preencher)
 
-| N | Algoritmo | Tempo (s) | Comparações | Trocas |
-|---|-----------|-----------|-------------|--------|
-| 100 | O(n²) | | | |
-| 100 | O(n log n) | | | |
-| 1.000 | O(n²) | | | |
-| 1.000 | O(n log n) | | | |
-| 10.000 | O(n²) | | | |
-| 10.000 | O(n log n) | | | |
+| $N$ | Algoritmo | Tempo (s) | Comparações | Movimentações |
+|-----|-----------|-----------|-------------|---------------|
+| 100 | Insertion Sort ($O(n^2)$) | | | |
+| 100 | Merge Sort ($O(n \log n)$) | | | |
+| 1.000 | Insertion Sort ($O(n^2)$) | | | |
+| 1.000 | Merge Sort ($O(n \log n)$) | | | |
+| 10.000 | Insertion Sort ($O(n^2)$) | | | |
+| 10.000 | Merge Sort ($O(n \log n)$) | | | |
 
-## 8. Checklist
+## 9. Checklist
 
-- [x] BST: inserir, buscar, listar (in-order) e excluir (3 casos), tudo recursivo
+### Etapa 1: Modelagem e TADs (15% da Nota) - 23/11
+
+- [x] Documento em PDF com o levantamento de requisitos
+- [x] Complexidade comentada em todas as funções dos `.h`
+- [x] Protótipo das structs e outros tipos de dados derivados
+
+### Etapa 2: Implementação e Integração (45% da Nota) - 03/12
+
+- [x] BST: inserir, buscar, listar (*in-order*), excluir (3 casos) e liberar, tudo recursivo
 - [x] Exclusão de ponto bloqueada se houver pedidos pendentes
 - [x] Heap com prioridade + desempate FIFO
 - [x] Validação de `id_destino` ao inserir pedido
+- [x] Despacho de pedidos (extração do heap + registro seguro no histórico)
 - [x] Histórico com registro, listagem e busca por código
 - [x] Ordenação O(n²) e O(n log n) sobre cópias dos dados
-- [ ] Comparação de algoritmos para N = 100, 1.000 e 10.000
 - [x] Carga automática de dados de teste
-- [x] Complexidade comentada em todas as funções dos `.h`
-- [x] Sem warnings, sem segfaults, sem vazamentos de memória
+
+### Etapa 3: Testes, Relatório e Defesa Oral (40% da Nota) - 07/12
+
+- [ ] Suíte completa de testes unitários
+  - [x] Teste unitário: BST
+  - [ ] Teste unitário: Heap
+  - [ ] Teste unitário: Histórico
+  - [ ] Teste unitário: Ordenação e Relatórios
+- [ ] Sem warnings, sem segfaults, sem vazamentos de memória
+  - [x] Validado no teste geral interativo
+  - [ ] Validado nos testes unitários
+- [ ] Manual de uso e execução no `README.md`
 - [ ] Relatório técnico em PDF
+- [ ] Comparação de algoritmos para N = 100, 1.000 e 10.000 documentada
+- [ ] Demonstração prática no laboratório com perguntas individuais para os membros da equipe
 
-## 9. Autoria
+### Opcionais
 
-- Arthur de Carvalho ([CarvDev](https://github.com/CarvDev))
-- Amanda Cardoso ([4mandaCardoso](https://github.com/4mandaCardoso))
-- Rafael Mota ([rafaelmotafreitas](https://github.com/rafaelmotafreitas))
-- Felipe Oliveira ([Felipzzk](https://github.com/Felipzzk))
+- [ ] QA interno
+- [ ] Makefile ou CMake
+  - [ ] Compilação padrão otimizada (`all`)
+  - [ ] Compilação de depuração (`debug`)
+  - [ ] Testes individuais (`test-bst`, `test-heap`, `test-historico`, `test-ordenacao`)
+  - [ ] Alvo agregador de testes (`test`)
+  - [ ] Limpeza (`clean`)
+- [ ] Manual em CLI com `--help`
+- [ ] Detalhar feedback e mensagens de erro
+- [ ] Interface gráfica
+
+## 10. Autoria
+
+- Amanda Cardoso Lopes ([4mandaCardoso](https://github.com/4mandaCardoso))
+- André Felipe Oliveira Xavier ([Felipzzk](https://github.com/Felipzzk))
+- Arthur de Carvalho Lima ([CarvDev](https://github.com/CarvDev))
+- Rafael Mota Freitas ([rafaelmotafreitas](https://github.com/rafaelmotafreitas))
+
+## 11. Licença
+
+Este projeto está licenciado sob a [**MIT License**](LICENSE).
