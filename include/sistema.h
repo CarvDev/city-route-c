@@ -12,18 +12,16 @@ typedef struct Sistema {
 /*
  * Função: sistema_iniciar.
  * Complexidade Temporal: O(1) no pior caso.
- * Implementação atual: inicializa o estado do sistema com todos 
- * os campos zerados, alocando os campos dinamicamente. 
+ * Inicializa o estado do sistema com todos os campos zerados, 
+ * alocando o histórico dinamicamente com historico_inicializar. 
  * Retorna 0 se `s` for NULL ou se a alocação falhar.
- 
- * Implementação futura: Chamar os métodos propriamente definidos
- * nos módulos para incialização das estruturas de dados do sistema. 
  */
 int sistema_iniciar(Sistema *s);
 
 /*
  * Função: sistema_encerrar.
- * Complexidade Temporal: O(1) no pior caso.
+ * Complexidade Temporal: O(p + h) no pior caso, para p pontos na BST e h
+ * pedidos no histórico.
  * Libera a memória alocada pelo sistema e zera seus campos. Segura quando
  * `s` for NULL.
  */
