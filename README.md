@@ -16,10 +16,10 @@ Cada módulo utiliza a estrutura de dados mais adequada à operação que realiz
 |---------------------|----------------------|
 | Árvore Binária de Busca (BST) | Cadastro, exclusão, busca e percurso em-ordem dos pontos de entrega |
 | Heap Binário Mínimo | Fila de prioridade dos pedidos pendentes (com desempate FIFO) |
-| Lista Simplesmente Encadeada (início e fim) | Histórico de pedidos despachados com inserção $O(1)$ ao final |
+| Lista Simplesmente Encadeada (início e fim) | Histórico de pedidos despachados com inserção O(1) ao final |
 | Recursividade | Inserção, busca, exclusão, percurso em-ordem e liberação na BST |
-| Insertion Sort ($O(n^2)$) | Algoritmo quadrático utilizado na comparação de desempenho |
-| Merge Sort ($O(n \log n)$) | Ordenação dos relatórios e comparação de desempenho |
+| Insertion Sort (O(n²)) | Algoritmo quadrático utilizado na comparação de desempenho |
+| Merge Sort (O(n log n)) | Ordenação dos relatórios e comparação de desempenho |
 
 ## 2. Entidades
 
@@ -58,14 +58,14 @@ Regra de prioridade: Expressa (`1`) > VIP (`2`) > Convencional (`3`). Empate res
 
 ### Módulo 3 — Histórico (Lista Simplesmente Encadeada)
 
-- **RF08** – Registrar pedido processado ao final da lista em $O(1)$
+- **RF08** – Registrar pedido processado ao final da lista em O(1)
 - **RF09** – Consultar histórico completo
 - **RF10** – Buscar pedido no histórico por código de rastreio
 
 ### Módulo 4 — Relatórios, Carga de Dados e Ordenação
 
 - **RF11** – Gerar relatório ordenado com **Merge Sort** (por código de rastreio ou valor), sobre **cópia** independente do histórico
-- **RF12** – Comparar **Insertion Sort** ($O(n^2)$) $\times$ **Merge Sort** ($O(n \log n)$): tempo (`<time.h>`), número de comparações e número de movimentações para $N = 100$, $1.000$ e $10.000$
+- **RF12** – Comparar **Insertion Sort** (O(n²)) × **Merge Sort** (O(n log n)): tempo (`<time.h>`), número de comparações e número de movimentações para N = 100, 1.000 e 10.000
 - **RF13** – Carga inicial automatizada com pontos e pedidos de teste
 
 ## 4. Estrutura do projeto
@@ -178,14 +178,14 @@ const NoBST *bst_buscar(const NoBST *raiz, int id_ponto);
 
 ## 8. Análise de desempenho (a preencher)
 
-| $N$ | Algoritmo | Tempo (s) | Comparações | Movimentações |
+| N | Algoritmo | Tempo (s) | Comparações | Movimentações |
 |-----|-----------|-----------|-------------|---------------|
-| 100 | Insertion Sort ($O(n^2)$) | | | |
-| 100 | Merge Sort ($O(n \log n)$) | | | |
-| 1.000 | Insertion Sort ($O(n^2)$) | | | |
-| 1.000 | Merge Sort ($O(n \log n)$) | | | |
-| 10.000 | Insertion Sort ($O(n^2)$) | | | |
-| 10.000 | Merge Sort ($O(n \log n)$) | | | |
+| 100 | Insertion Sort (O(n²)) | | | |
+| 100 | Merge Sort (O(n log n)) | | | |
+| 1.000 | Insertion Sort (O(n²)) | | | |
+| 1.000 | Merge Sort (O(n log n)) | | | |
+| 10.000 | Insertion Sort (O(n²)) | | | |
+| 10.000 | Merge Sort (O(n log n)) | | | |
 
 ## 9. Checklist
 
