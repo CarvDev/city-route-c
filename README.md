@@ -146,7 +146,89 @@ gcc -Wall -Wextra -pedantic -std=c11 -g -O0 -UNDEBUG -fsanitize=address,undefine
 
 O repositório conta com o workflow `.github/workflows/build.yml`, executado automaticamente sempre que um **Pull Request** é aberto ou atualizado. Caso a compilação gere qualquer erro ou *warning*, o Pull Request é recusado automaticamente.
 
-## 6. Requisitos técnicos
+## 6. Guia de uso
+
+Após compilar (seção 5), execute `./cityroute`. O programa abre no **Menu Principal**:
+
+```text
+1 - Pontos de Entrega
+2 - Pedidos
+3 - Histórico
+4 - Relatórios
+5 - Ajuda
+0 - Sair
+```
+
+Digite o número da opção e pressione `ENTER`. Em qualquer submenu, `0` volta ao menu principal; no menu principal, `0` encerra o programa e libera a memória. Após cada operação, a mensagem `Pressione ENTER para continuar...` exige um `ENTER` extra. Opções inválidas exibem um aviso e retornam ao menu.
+
+### Fluxo recomendado
+
+1. Cadastre pontos de entrega (módulo 1): um pedido só é aceito se o `id_destino` existir.
+2. Insira pedidos (módulo 2): a fila atende primeiro a menor prioridade numérica (Expressa `1` > VIP `2` > Convencional `3`), com desempate por ordem de chegada (FIFO).
+3. Processe o despacho (módulo 2, opção `3`) para remover o pedido do heap e registrá-lo no histórico.
+4. Consulte o histórico (módulo 3) e gere relatórios ou compare algoritmos (módulo 4).
+
+### Dados digitados
+
+| Campo | Formato e validação |
+|-------|---------------------|
+| Opções, IDs, códigos e prioridade | Inteiros, um por linha; prioridade aceita somente `1`, `2` ou `3` |
+| Nome do local | Texto não vazio de até 99 caracteres (aceita acentos) |
+| Latitude e longitude | Números decimais finitos, com `.` como separador (ex.: `-14.8167`) |
+| Peso (kg) | Decimal finito maior que `0` |
+| Valor (R$) | Decimal finito maior ou igual a `0` |
+| Código de rastreio | Inteiro único: não pode repetir entre pendentes nem no histórico |
+
+### Módulo 1 — Pontos de Entrega
+
+| Opção | Entradas | Resultado |
+|-------|----------|-----------|
+| `1` Cadastrar ponto | `ID do ponto`, `Nome do local`, `Latitude`, `Longitude` | Insere na BST; ID repetido é recusado |
+| `2` Buscar ponto por código | `ID do ponto` | Exibe ID, nome e coordenadas, ou aviso de não encontrado |
+| `3` Listar pontos em ordem | — | Percurso *in-order*: IDs em ordem crescente |
+| `4` Excluir ponto | `ID do ponto` | Remove o nó; recusado se houver pedido pendente com esse destino |
+
+### Módulo 2 — Pedidos
+
+| Opção | Entradas | Resultado |
+|-------|----------|-----------|
+| `1` Inserir pedido | `Código de rastreio`, `Prioridade`, `ID do destino`, `Peso (kg)`, `Valor (R$)` | Entra no heap se o destino existir e o rastreio for único |
+| `2` Consultar próximo pedido | — | Mostra o topo do heap sem removê-lo |
+| `3` Processar despacho | — | Remove o topo e o registra no histórico; se o registro falhar, o pedido permanece pendente |
+| `4` Exibir pedidos pendentes | — | Mostra a disposição interna do heap (que não é a ordem de despacho) |
+
+### Módulo 3 — Histórico
+
+| Opção | Entradas | Resultado |
+|-------|----------|-----------|
+| `1` Consultar histórico completo | — | Lista somente os pedidos já despachados |
+| `2` Buscar pedido por código de rastreio | `Código de rastreio` | Exibe o pedido ou aviso de não encontrado |
+
+### Módulo 4 — Relatórios
+
+| Opção | Entradas | Resultado |
+|-------|----------|-----------|
+| `1` Relatório ordenado | Critério: `1` por rastreio ou `2` por valor | Lista o histórico ordenado com Merge Sort, sem alterá-lo |
+| `2` Comparar algoritmos de ordenação | Critério: `1` por rastreio ou `2` por valor | Mostra tempo, comparações e movimentações de Insertion Sort e Merge Sort sobre o histórico atual |
+| `3` Carga inicial automatizada | Confirmação `S/N` (se já houver dados) e quantidade: `1` = 100, `2` = 1.000, `3` = 10.000 | **Apaga os dados atuais** e gera `N` pontos e `2N` pedidos, dos quais `N` já são despachados |
+
+A carga é a forma mais rápida de preparar a comparação do RF12: com `1` = 100, por exemplo, o histórico passa a ter exatamente 100 pedidos.
+
+### Manual de ajuda
+
+O manual com uso, opções, módulos, navegação e regras de entrada pode ser consultado de duas formas:
+
+- **Pelo menu interativo:** escolha `5 - Ajuda` no Menu Principal. O texto é exibido e, após o `ENTER` da pausa, o menu principal retorna.
+- **Pela linha de comando:** sem abrir o menu, execute:
+
+```bash
+./cityroute --help
+./cityroute -h
+```
+
+As duas opções de linha de comando terminam com código de saída `0`. Qualquer outro argumento (ou quantidade inválida de argumentos) exibe uma mensagem de erro, terminando com código `1`. Sem argumentos, o programa inicia normalmente.
+
+## 7. Requisitos técnicos
 
 - **C11** (ISO/IEC 9899:2011), modularizado em arquivos `.h` e `.c`
 - Alocação dinâmica obrigatória; **proibido** usar vetores estáticos para estruturas dinâmicas
@@ -168,7 +250,7 @@ O repositório conta com o workflow `.github/workflows/build.yml`, executado aut
 const NoBST *bst_buscar(const NoBST *raiz, int id_ponto);
 ```
 
-## 7. Etapas e avaliação
+## 8. Etapas e avaliação
 
 | Etapa | Data | Entrega | Peso |
 |-------|------|---------|------|
@@ -176,7 +258,7 @@ const NoBST *bst_buscar(const NoBST *raiz, int id_ponto);
 | 2. Implementação e Integração | 03/12 | Código-fonte funcional e modularizado com menu interativo integrando BST, Heap e Histórico | 45% |
 | 3. Testes, Relatório e Defesa Oral | 07/12 | Testes unitários, relatório técnico em PDF e apresentação no laboratório com perguntas individuais | 40% |
 
-## 8. Análise de desempenho (a preencher)
+## 9. Análise de desempenho (a preencher)
 
 | N | Algoritmo | Tempo (s) | Comparações | Movimentações |
 |-----|-----------|-----------|-------------|---------------|
@@ -187,7 +269,7 @@ const NoBST *bst_buscar(const NoBST *raiz, int id_ponto);
 | 10.000 | Insertion Sort (O(n²)) | | | |
 | 10.000 | Merge Sort (O(n log n)) | | | |
 
-## 9. Checklist
+## 10. Checklist
 
 ### Etapa 1: Modelagem e TADs (15% da Nota) - 23/11
 
@@ -216,7 +298,7 @@ const NoBST *bst_buscar(const NoBST *raiz, int id_ponto);
 - [ ] Sem warnings, sem segfaults, sem vazamentos de memória
   - [x] Validado no teste geral interativo
   - [ ] Validado nos testes unitários
-- [ ] Manual de uso e execução no `README.md`
+- [x] Manual de uso e execução no `README.md`
 - [ ] Relatório técnico em PDF
 - [ ] Comparação de algoritmos para N = 100, 1.000 e 10.000 documentada
 - [ ] Demonstração prática no laboratório com perguntas individuais para os membros da equipe
@@ -230,17 +312,17 @@ const NoBST *bst_buscar(const NoBST *raiz, int id_ponto);
   - [ ] Testes individuais (`test-bst`, `test-heap`, `test-historico`, `test-ordenacao`)
   - [ ] Alvo agregador de testes (`test`)
   - [ ] Limpeza (`clean`)
-- [ ] Manual em CLI com `--help`
+- [x] Manual em CLI com `--help`
 - [ ] Detalhar feedback e mensagens de erro
 - [ ] Interface gráfica
 
-## 10. Autoria
+## 11. Autoria
 
 - Amanda Cardoso Lopes ([4mandaCardoso](https://github.com/4mandaCardoso))
 - André Felipe Oliveira Xavier ([Felipzzk](https://github.com/Felipzzk))
 - Arthur de Carvalho Lima ([CarvDev](https://github.com/CarvDev))
 - Rafael Mota Freitas ([rafaelmotafreitas](https://github.com/rafaelmotafreitas))
 
-## 11. Licença
+## 12. Licença
 
 Este projeto está licenciado sob a [**MIT License**](LICENSE).

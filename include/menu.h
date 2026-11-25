@@ -33,6 +33,14 @@ typedef struct {
 void exibir_prompt(void);
 
 /*
+ * Função: exibir_ajuda.
+ * Complexidade Temporal: O(1) no pior caso, pois o manual é texto constante.
+ * Exibe na saída padrão o manual de uso com opções, módulos, navegação e
+ * regras de entrada. Não lê entradas nem altera o estado do sistema.
+ */
+void exibir_ajuda(void);
+
+/*
  * Função: executar_menu.
  * Complexidade Temporal: O(n) por iteração do laço (exibicao dos n itens),
  * mais o custo da acao escolhida; o numero de iteracoes depende do usuario.
