@@ -153,8 +153,9 @@ Após compilar (seção 5), execute `./cityroute`. O programa abre no **Menu Pri
 ```text
 1 - Pontos de Entrega
 2 - Pedidos
-3 - Historico
-4 - Relatorios
+3 - Histórico
+4 - Relatórios
+5 - Ajuda
 0 - Sair
 ```
 
@@ -212,6 +213,20 @@ Digite o número da opção e pressione `ENTER`. Em qualquer submenu, `0` volta 
 | `3` Carga inicial automatizada | Confirmação `S/N` (se já houver dados) e quantidade: `1` = 100, `2` = 1.000, `3` = 10.000 | **Apaga os dados atuais** e gera `N` pontos e `2N` pedidos, dos quais `N` já são despachados |
 
 A carga é a forma mais rápida de preparar a comparação do RF12: com `1` = 100, por exemplo, o histórico passa a ter exatamente 100 pedidos.
+
+### Manual de ajuda
+
+O manual com uso, opções, módulos, navegação e regras de entrada pode ser consultado de duas formas:
+
+- **Pelo menu interativo:** escolha `5 - Ajuda` no Menu Principal. O texto é exibido e, após o `ENTER` da pausa, o menu principal retorna.
+- **Pela linha de comando:** sem abrir o menu, execute:
+
+```bash
+./cityroute --help
+./cityroute -h
+```
+
+As duas opções de linha de comando terminam com código de saída `0`. Qualquer outro argumento (ou quantidade inválida de argumentos) exibe uma mensagem de erro, terminando com código `1`. Sem argumentos, o programa inicia normalmente.
 
 ## 7. Requisitos técnicos
 
@@ -297,7 +312,7 @@ const NoBST *bst_buscar(const NoBST *raiz, int id_ponto);
   - [ ] Testes individuais (`test-bst`, `test-heap`, `test-historico`, `test-ordenacao`)
   - [ ] Alvo agregador de testes (`test`)
   - [ ] Limpeza (`clean`)
-- [ ] Manual em CLI com `--help`
+- [x] Manual em CLI com `--help`
 - [ ] Detalhar feedback e mensagens de erro
 - [ ] Interface gráfica
 
