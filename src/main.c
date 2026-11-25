@@ -1,10 +1,24 @@
 #include <stdio.h>
 #include <string.h>
+#include <locale.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 #include "menu.h"
 #include "sistema.h"
 
 int main(int argc, char **argv) {
+    // Força o terminal do Windows a interpretar os bytes enviados para stdout como UTF-8
+    #ifdef _WIN32
+        SetConsoleOutputCP(CP_UTF8);
+        SetConsoleCP(CP_UTF8);
+    #endif
+
+    setlocale(LC_CTYPE, "");    // Para uso de acentos e caracteres UTF-8
+    setlocale(LC_NUMERIC, "C"); // Para uso de '.' como separador decimal
+    
     if (argc == 2 && argv[1] != NULL &&
         (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)) {
         exibir_ajuda();
